@@ -33,6 +33,9 @@ class LeasingInfoSection extends StatelessWidget {
   /// 下架回调
   final VoidCallback? onTakeDown;
 
+  /// 是否已预约到期下架
+  final bool isScheduledForTakeDown;
+
   const LeasingInfoSection({
     super.key,
     required this.leasingType,
@@ -44,6 +47,7 @@ class LeasingInfoSection extends StatelessWidget {
     this.onRenewal,
     this.onChangePackage,
     this.onTakeDown,
+    this.isScheduledForTakeDown = false,
   });
 
   @override
@@ -112,7 +116,10 @@ class LeasingInfoSection extends StatelessWidget {
                     _buildActionButton('变更套餐', onChangePackage!),
                   const Text('|', style: TextStyle(color: Colors.grey)),
                   if (onTakeDown != null)
-                    _buildActionButton('下架', onTakeDown!),
+                    _buildActionButton(
+                      isScheduledForTakeDown ? '取消到期预约下架' : '下架',
+                      onTakeDown!,
+                    ),
                 ],
               ),
             ],

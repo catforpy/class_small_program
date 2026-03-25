@@ -130,6 +130,7 @@ class _CourseDetailManagementPageState extends State<CourseDetailManagementPage>
                 _showTakeDownDialog();
               }
             },
+            isScheduledForTakeDown: _isScheduledForTakeDown,
           ),
 
           // 标签栏
