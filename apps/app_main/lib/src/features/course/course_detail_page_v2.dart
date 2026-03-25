@@ -413,6 +413,9 @@ class _CourseDetailPageV2State extends State<CourseDetailPageV2>
       itemCount: chapters.length,
       itemBuilder: (context, index) {
         final chapter = chapters[index] as Map<String, dynamic>;
+        final expanded = chapter['expanded'] as bool? ?? false;
+        final lessons = chapter['lessons'] as List<dynamic>? ?? [];
+
         return Container(
           margin: const EdgeInsets.only(bottom: 16),
           padding: const EdgeInsets.all(16),
@@ -426,55 +429,124 @@ class _CourseDetailPageV2State extends State<CourseDetailPageV2>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      chapter['title'] as String,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+              // 章节标题行（可点击展开/收起）
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    chapter['expanded'] = !(expanded);
+                  });
+                },
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            chapter['title'] as String,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${lessons.length}节课 · ${chapter['duration']}',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  if (chapter['hasTrial'] as bool)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.green.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: Colors.green),
-                      ),
-                      child: const Text(
-                        '可试看',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.green,
+                    Icon(
+                      expanded ? Icons.expand_less : Icons.expand_more,
+                      color: Colors.grey[600],
+                    ),
+                  ],
+                ),
+              ),
+              // 课时列表（展开时显示）
+              if (expanded && lessons.isNotEmpty)
+                ...lessons.asMap().entries.map<Widget>((entry) {
+                  final lessonIndex = entry.key;
+                  final lesson = entry.value as Map<String, dynamic>;
+                  final isTrial = lesson['isTrial'] as bool? ?? false;
+
+                  return Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(
+                          color: Colors.grey.withValues(alpha: 0.2),
                         ),
                       ),
                     ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                chapter['content'] as String? ?? '',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey[600],
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                '时长：${chapter['duration']}',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[500],
-                ),
-              ),
+                    child: GestureDetector(
+                      onTap: () {
+                        if (isTrial) {
+                          // 可试看：跳转到播放页面
+                          context.push('/course2/1?lesson=${lesson['title']}');
+                        } else {
+                          // 不可试看：提示购买
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('请下单购买后观看'),
+                              backgroundColor: Colors.orange,
+                            ),
+                          );
+                        }
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.play_circle_outline,
+                            size: 20,
+                            color: isTrial ? Colors.green : Colors.grey,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              lesson['title'] as String,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            lesson['duration'] as String,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          if (isTrial)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.green.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(color: Colors.green),
+                              ),
+                              child: const Text(
+                                '可试看',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
             ],
           ),
         );
