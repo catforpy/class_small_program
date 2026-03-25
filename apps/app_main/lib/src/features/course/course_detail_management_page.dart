@@ -2,7 +2,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../shared/widgets/cards/activity_card.dart';
+import '../../shared/widgets/cards/activity_card.dart';
 
 /// 课程详情管理页面
 ///

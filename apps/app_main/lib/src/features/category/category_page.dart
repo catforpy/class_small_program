@@ -2,7 +2,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../shared/widgets/cards/product_card.dart';
+import '../../shared/widgets/cards/product_card.dart';
 
 /// 分类页面
 ///
