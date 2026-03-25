@@ -1271,7 +1271,7 @@ class _CourseDetailPageV2State extends State<CourseDetailPageV2>
                     Row(
                       children: [
                         Text(
-                          '分享赚佣金',
+                          '邀好友赢赠金',
                           style: const TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
@@ -1286,7 +1286,7 @@ class _CourseDetailPageV2State extends State<CourseDetailPageV2>
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
-                            '提成$commissionRate%',
+                            '赠金$commissionRate%',
                             style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -1298,7 +1298,7 @@ class _CourseDetailPageV2State extends State<CourseDetailPageV2>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '分享课程成功后可获得佣金',
+                      '分享课程成功后可获得赠金',
                       style: TextStyle(
                         fontSize: 13,
                         color: Colors.grey[600],
@@ -1364,7 +1364,7 @@ class _CourseDetailPageV2State extends State<CourseDetailPageV2>
                                 fontSize: 15,
                               ),
                             ),
-                            TextSpan(text: ' 佣金'),
+                            TextSpan(text: ' 赠金'),
                           ],
                         ),
                       ),
@@ -1377,9 +1377,9 @@ class _CourseDetailPageV2State extends State<CourseDetailPageV2>
 
           const SizedBox(height: 20),
 
-          // 提成规则
+          // 赠金规则
           Text(
-            '提成规则',
+            '赠金规则',
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.bold,
@@ -1401,8 +1401,8 @@ class _CourseDetailPageV2State extends State<CourseDetailPageV2>
           const SizedBox(height: 10),
           _buildRuleItem(
             icon: Icons.check_circle,
-            title: '获得佣金',
-            description: '交易完成后，佣金将自动转入您的账户',
+            title: '获得赠金',
+            description: '交易完成后，赠金将自动转入您的账户',
           ),
 
           const SizedBox(height: 20),
@@ -1437,11 +1437,11 @@ class _CourseDetailPageV2State extends State<CourseDetailPageV2>
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '• 佣金比例按课程实际成交价格计算\n'
-                  '• 退款订单不计入佣金\n'
-                  '• 佣金将在交易完成后7个工作日内到账\n'
-                  '• 单笔订单最高佣金不超过¥1000\n'
-                  '• 月累计佣金超过¥800需缴纳个人所得税',
+                  '• 赠金比例按课程实际成交价格计算\n'
+                  '• 退款订单不计入赠金\n'
+                  '• 赠金将在交易完成后7个工作日内到账\n'
+                  '• 单笔订单最高赠金不超过¥1000\n'
+                  '• 月累计赠金超过¥800需缴纳个人所得税',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[700],

@@ -317,7 +317,7 @@ class _CategoryPageState extends State<CategoryPage> {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      '分享提成',
+                      '邀好友赚赠金',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -369,7 +369,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    '提成${course['commissionRate']}%',
+                                    '赠金${course['commissionRate']}%',
                                     style: TextStyle(
                                       fontSize: 11,
                                       color: Colors.orange[700],
@@ -458,7 +458,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              // 转发提成标签
+                              // 转发赠金标签
                               if (course['hasCommission'] as bool)
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
@@ -479,7 +479,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                       ),
                                       const SizedBox(width: 2),
                                       Text(
-                                        '提成${course['commissionRate']}%',
+                                        '赠金${course['commissionRate']}%',
                                         style: TextStyle(
                                           fontSize: 10,
                                           color: Colors.orange[700],

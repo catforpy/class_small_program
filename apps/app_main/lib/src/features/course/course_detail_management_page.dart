@@ -36,6 +36,13 @@ class _CourseDetailManagementPageState extends State<CourseDetailManagementPage>
     'expiryDate': '2026-12-31',
     'remainingHours': null,
     'remainingMinutes': null,
+    // 活动状态
+    'hasPromotion': false, // 活动价
+    'promotionPrice': 15900, // 活动价格
+    'hasCommission': true, // 转发赠金
+    'commissionRate': 10, // 赠金比例
+    'hasFreeTrial': false, // 限时免费
+    'hasNewUserOffer': false, // 新用户专享
   };
 
   // 课程大纲
@@ -98,7 +105,7 @@ class _CourseDetailManagementPageState extends State<CourseDetailManagementPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
   }
 
   @override
@@ -179,6 +186,7 @@ class _CourseDetailManagementPageState extends State<CourseDetailManagementPage>
                 Tab(text: '课程资料'),
                 Tab(text: '互动管理'),
                 Tab(text: '数据统计'),
+                Tab(text: '活动管理'),
               ],
             ),
           ),
@@ -191,6 +199,7 @@ class _CourseDetailManagementPageState extends State<CourseDetailManagementPage>
                 _buildCourseMaterialsTab(),
                 _buildInteractionTab(),
                 _buildDataStatsTab(),
+                _buildActivityManagementTab(),
               ],
             ),
           ),
@@ -1831,6 +1840,642 @@ class _CourseDetailManagementPageState extends State<CourseDetailManagementPage>
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// ==================== 活动管理标签页 ====================
+  Widget _buildActivityManagementTab() {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        // 活动价设置
+        _buildActivityCard(
+          icon: Icons.local_offer,
+          title: '活动价设置',
+          subtitle: '开启后可以设置促销价格',
+          enabled: _courseInfo['hasPromotion'] as bool? ?? false,
+          onToggle: (value) {
+            setState(() {
+              _courseInfo['hasPromotion'] = value;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(value ? '已开启活动价' : '已关闭活动价'),
+                backgroundColor: value ? Colors.green : Colors.orange,
+              ),
+            );
+          },
+          onTap: () {
+            if (_courseInfo['hasPromotion'] as bool? ?? false) {
+              _showPromotionPriceDialog();
+            }
+          },
+        ),
+
+        const SizedBox(height: 16),
+
+        // 转发赠金活动
+        _buildActivityCard(
+          icon: Icons.card_giftcard,
+          title: '转发赠金活动',
+          subtitle: '开启后用户分享可获得赠金',
+          enabled: _courseInfo['hasCommission'] as bool? ?? false,
+          onToggle: (value) {
+            setState(() {
+              _courseInfo['hasCommission'] = value;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(value ? '已开启转发赠金' : '已关闭转发赠金'),
+                backgroundColor: value ? Colors.green : Colors.orange,
+              ),
+            );
+          },
+          onTap: () {
+            if (_courseInfo['hasCommission'] as bool? ?? false) {
+              _showCommissionSettingsDialog();
+            }
+          },
+        ),
+
+        const SizedBox(height: 16),
+
+        // 限时免费活动
+        _buildActivityCard(
+          icon: Icons.access_time,
+          title: '限时免费活动',
+          subtitle: '开启后课程可免费观看',
+          enabled: _courseInfo['hasFreeTrial'] as bool? ?? false,
+          onToggle: (value) {
+            setState(() {
+              _courseInfo['hasFreeTrial'] = value;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(value ? '已开启限时免费' : '已关闭限时免费'),
+                backgroundColor: value ? Colors.green : Colors.orange,
+              ),
+            );
+          },
+          onTap: () {
+            if (_courseInfo['hasFreeTrial'] as bool? ?? false) {
+              _showFreeTrialDialog();
+            }
+          },
+        ),
+
+        const SizedBox(height: 16),
+
+        // 新用户专享
+        _buildActivityCard(
+          icon: Icons.person_add,
+          title: '新用户专享',
+          subtitle: '新用户首次购买享受优惠',
+          enabled: _courseInfo['hasNewUserOffer'] as bool? ?? false,
+          onToggle: (value) {
+            setState(() {
+              _courseInfo['hasNewUserOffer'] = value;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(value ? '已开启新用户专享' : '已关闭新用户专享'),
+                backgroundColor: value ? Colors.green : Colors.orange,
+              ),
+            );
+          },
+          onTap: () {
+            if (_courseInfo['hasNewUserOffer'] as bool? ?? false) {
+              _showNewUserOfferDialog();
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  /// 构建活动卡片
+  Widget _buildActivityCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required bool enabled,
+    required ValueChanged<bool> onToggle,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: enabled ? const Color(0xFFFF4757) : Colors.grey.withValues(alpha: 0.3),
+          width: enabled ? 2 : 1,
+        ),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: enabled ? const Color(0xFFFF4757).withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  icon,
+                  color: enabled ? const Color(0xFFFF4757) : Colors.grey[600],
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: enabled ? const Color(0xFFFF4757) : Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Switch(
+                value: enabled,
+                onChanged: onToggle,
+                activeColor: const Color(0xFFFF4757),
+              ),
+            ],
+          ),
+          if (enabled) ...[
+            const SizedBox(height: 12),
+            const Divider(),
+            const SizedBox(height: 8),
+            GestureDetector(
+              onTap: onTap,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFF4757).withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '点击设置详细参数',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                      color: Colors.grey[700],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// 显示活动价设置对话框
+  void _showPromotionPriceDialog() {
+    final originalPrice = 19900;
+    int tempPromotionPrice = _courseInfo['promotionPrice'] as int? ?? 15900;
+    final TextEditingController priceController = TextEditingController(
+      text: (tempPromotionPrice ~/ 100).toString(),
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          double discount = (tempPromotionPrice / originalPrice) * 10;
+
+          return AlertDialog(
+            title: const Text('设置活动价'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '原价：¥${originalPrice ~/ 100}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text('活动价：', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: priceController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: Color(0xFFFF4757), width: 2),
+                    ),
+                    prefixText: '¥ ',
+                    hintText: '请输入活动价格',
+                  ),
+                  onChanged: (value) {
+                    final newPrice = (double.tryParse(value) ?? 0) * 100;
+                    setDialogState(() {
+                      tempPromotionPrice = newPrice.toInt();
+                    });
+                  },
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: Colors.orange.withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '折扣：',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                      Text(
+                        '${discount.toStringAsFixed(1)}折',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange[700],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // 快捷折扣按钮
+                const Text('快捷折扣：', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    {'label': '7折', 'value': 0.7},
+                    {'label': '8折', 'value': 0.8},
+                    {'label': '8.5折', 'value': 0.85},
+                    {'label': '9折', 'value': 0.9},
+                    {'label': '9.5折', 'value': 0.95},
+                  ].map((item) {
+                    final itemValue = item['value'] as double;
+                    final isSelected = discount == itemValue * 10;
+                    return OutlinedButton(
+                      onPressed: () {
+                        final newPrice = (originalPrice * itemValue).toInt();
+                        setDialogState(() {
+                          tempPromotionPrice = newPrice;
+                          priceController.text = (newPrice ~/ 100).toString();
+                        });
+                      },
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: isSelected ? Colors.white : const Color(0xFFFF4757),
+                        backgroundColor: isSelected ? const Color(0xFFFF4757) : Colors.transparent,
+                        side: BorderSide(
+                          color: const Color(0xFFFF4757),
+                          width: isSelected ? 2 : 1,
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        minimumSize: Size(70, 32),
+                      ),
+                      child: Text(item['label'] as String),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 12),
+                Text('提示：活动价设置后将在课程页面显示促销标签',
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('取消'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _courseInfo['promotionPrice'] = tempPromotionPrice;
+                  });
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('活动价已设置为¥${tempPromotionPrice ~/ 100}'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFF4757),
+                ),
+                child: const Text('确定'),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  /// 显示赠金设置对话框
+  void _showCommissionSettingsDialog() {
+    int tempCommissionRate = _courseInfo['commissionRate'] as int? ?? 10;
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: const Text('设置转发赠金'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 赠金比例显示
+              Center(
+                child: Text(
+                  '赠金比例：$tempCommissionRate%',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFFF4757),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              // 滑动条
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '1%',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      Text(
+                        '50%',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Slider(
+                    value: tempCommissionRate.toDouble(),
+                    min: 1,
+                    max: 50,
+                    divisions: 49,
+                    activeColor: const Color(0xFFFF4757),
+                    onChanged: (value) {
+                      setDialogState(() {
+                        tempCommissionRate = value.toInt();
+                      });
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              // 快捷选择按钮
+              const Text('快捷选择：', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [5, 10, 15, 20, 30].map((rate) {
+                  return OutlinedButton(
+                    onPressed: () {
+                      setDialogState(() {
+                        tempCommissionRate = rate;
+                      });
+                    },
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: tempCommissionRate == rate
+                          ? Colors.white
+                          : const Color(0xFFFF4757),
+                      backgroundColor: tempCommissionRate == rate
+                          ? const Color(0xFFFF4757)
+                          : Colors.transparent,
+                      side: BorderSide(
+                        color: const Color(0xFFFF4757),
+                        width: tempCommissionRate == rate ? 2 : 1,
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      minimumSize: Size(60, 32),
+                    ),
+                    child: Text('$rate%'),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 16),
+              const Text('赠金说明：'),
+              const SizedBox(height: 8),
+              Text(
+                '• 用户分享课程后，购买者支付课程金额\n'
+                '• 分享者获得${tempCommissionRate}%的赠金奖励\n'
+                '• 赠金将在交易完成后7个工作日到账\n'
+                '• 退款订单不计入赠金',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[700],
+                  height: 1.5,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('取消'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _courseInfo['commissionRate'] = tempCommissionRate;
+                });
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('赠金比例已设置为$tempCommissionRate%'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFFF4757),
+              ),
+              child: const Text('确定'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 显示限时免费设置对话框
+  void _showFreeTrialDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('限时免费设置'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '开启后，所有用户可免费观看课程内容',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.black87,
+              ),
+            ),
+            SizedBox(height: 16),
+            Text(
+              '温馨提示：',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: Colors.orange,
+              ),
+            ),
+            Text(
+              '• 免费期间不产生收益\n'
+              '• 可随时关闭免费活动\n'
+              '• 关闭后已购买的用户不受影响',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[700],
+                height: 1.5,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('取消'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('限时免费设置已保存'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFFF4757),
+            ),
+            child: const Text('确定'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 显示新用户专享设置对话框
+  void _showNewUserOfferDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('新用户专享设置'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '新用户首次购买可享受优惠',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.black87,
+              ),
+            ),
+            SizedBox(height: 16),
+            Text(
+              '优惠方案：',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            Text(
+              '• 首次购买享8折优惠\n'
+              '• 仅限首次购买的用户\n'
+              '• 每个用户仅可享受一次',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[700],
+                height: 1.5,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('取消'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('新用户专享设置已保存'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFFF4757),
+            ),
+            child: const Text('确定'),
+          ),
+        ],
       ),
     );
   }

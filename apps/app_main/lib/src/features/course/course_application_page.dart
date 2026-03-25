@@ -865,15 +865,15 @@ class _CourseApplicationPageState extends State<CourseApplicationPage> with Sing
 
         const SizedBox(height: 16),
 
-        // 转发提成设置
+        // 转发赠金设置
         _buildSectionCard(
-          title: '转发提成',
+          title: '转发赠金',
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SwitchListTile(
-                title: const Text('启用转发提成'),
-                subtitle: const Text('学员通过分享链接购买后，分享者可获得提成奖励'),
+                title: const Text('启用转发赠金'),
+                subtitle: const Text('学员通过分享链接购买后，分享者可获得赠金奖励'),
                 value: _commissionEnabled,
                 onChanged: (value) {
                   setState(() {
@@ -884,7 +884,7 @@ class _CourseApplicationPageState extends State<CourseApplicationPage> with Sing
               if (_commissionEnabled) ...[
                 const SizedBox(height: 12),
                 Text(
-                  '提成比例：${_commissionRate.toStringAsFixed(0)}%',
+                  '赠金比例：${_commissionRate.toStringAsFixed(0)}%',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -941,7 +941,7 @@ class _CourseApplicationPageState extends State<CourseApplicationPage> with Sing
                           Icon(Icons.info_outline, size: 16, color: Colors.blue[700]),
                           const SizedBox(width: 8),
                           Text(
-                            '提成示例',
+                            '赠金示例',
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
@@ -967,7 +967,7 @@ class _CourseApplicationPageState extends State<CourseApplicationPage> with Sing
                         ),
                       ),
                       Text(
-                        '• 分享者提成：¥${(double.tryParse(_priceController.text) ?? 0 * _commissionRate / 100).toStringAsFixed(2)}',
+                        '• 分享者赠金：¥${(double.tryParse(_priceController.text) ?? 0 * _commissionRate / 100).toStringAsFixed(2)}',
                         style: TextStyle(
                           fontSize: 11,
                           color: Colors.grey[600],
