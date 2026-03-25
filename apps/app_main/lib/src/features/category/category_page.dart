@@ -2,6 +2,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../shared/widgets/cards/product_card.dart';
 
 /// 分类页面
 ///
@@ -414,131 +415,18 @@ class _CategoryPageState extends State<CategoryPage> {
         ...courses.map((course) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 12),
-            child: GestureDetector(
+            child: ProductCard(
+              imageUrl: course['imageUrl'] as String,
+              title: course['title'] as String,
+              subtitle: course['subtitle'] as String,
+              price: course['price'] as int,
+              originalPrice: course['originalPrice'] as int?,
+              studyCount: course['studyCount'] as int,
+              hasCommission: course['hasCommission'] as bool,
+              commissionRate: course['commissionRate'] as int?,
               onTap: () {
-                // 跳转到课程详情页
                 context.push('/course2/${course['id']}');
               },
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
-                ),
-                child: Row(
-                  children: [
-                    // 课程封面
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        course['imageUrl'] as String,
-                        width: 100,
-                        height: 75,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    // 课程信息
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  course['title'] as String,
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              // 转发赠金标签
-                              if (course['hasCommission'] as bool)
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: Colors.orange.withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(4),
-                                    border: Border.all(
-                                      color: Colors.orange.withValues(alpha: 0.3),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.card_giftcard,
-                                        size: 11,
-                                        color: Colors.orange[700],
-                                      ),
-                                      const SizedBox(width: 2),
-                                      Text(
-                                        '赠金${course['commissionRate']}%',
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          color: Colors.orange[700],
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            course['subtitle'] as String,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Text(
-                                '¥${(course['price'] as int) ~/ 100}',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFFF4757),
-                                ),
-                              ),
-                              if (course['originalPrice'] != null) ...[
-                                const SizedBox(width: 8),
-                                Text(
-                                  '¥${(course['originalPrice'] as int) ~/ 100}',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey[400],
-                                    decoration: TextDecoration.lineThrough,
-                                  ),
-                                ),
-                              ],
-                              const Spacer(),
-                              Text(
-                                '${(course['studyCount'] as int) / 1000}k人学',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ),
           );
         }),

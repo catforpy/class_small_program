@@ -2,6 +2,7 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../shared/widgets/cards/activity_card.dart';
 
 /// 课程详情管理页面
 ///
@@ -1954,7 +1955,7 @@ class _CourseDetailManagementPageState extends State<CourseDetailManagementPage>
     );
   }
 
-  /// 构建活动卡片
+  /// 构建活动卡片（使用公用组件）
   Widget _buildActivityCard({
     required IconData icon,
     required String title,
@@ -1963,99 +1964,13 @@ class _CourseDetailManagementPageState extends State<CourseDetailManagementPage>
     required ValueChanged<bool> onToggle,
     required VoidCallback onTap,
   }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: enabled ? const Color(0xFFFF4757) : Colors.grey.withValues(alpha: 0.3),
-          width: enabled ? 2 : 1,
-        ),
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: enabled ? const Color(0xFFFF4757).withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(
-                  icon,
-                  color: enabled ? const Color(0xFFFF4757) : Colors.grey[600],
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: enabled ? const Color(0xFFFF4757) : Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Switch(
-                value: enabled,
-                onChanged: onToggle,
-                activeColor: const Color(0xFFFF4757),
-              ),
-            ],
-          ),
-          if (enabled) ...[
-            const SizedBox(height: 12),
-            const Divider(),
-            const SizedBox(height: 8),
-            GestureDetector(
-              onTap: onTap,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFF4757).withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '点击设置详细参数',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey[700],
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                      color: Colors.grey[700],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
+    return ActivityCard(
+      icon: icon,
+      title: title,
+      subtitle: subtitle,
+      enabled: enabled,
+      onToggle: onToggle,
+      onTap: onTap,
     );
   }
 
