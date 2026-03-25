@@ -218,6 +218,7 @@ class _CourseDetailPageV2State extends State<CourseDetailPageV2>
         onTap: (index) {
           _tabController.animateTo(index);
         },
+        controller: _tabController,
       ),
     );
   }

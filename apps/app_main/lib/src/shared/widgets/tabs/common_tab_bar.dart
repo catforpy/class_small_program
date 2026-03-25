@@ -58,6 +58,9 @@ class CommonTabBar extends StatelessWidget {
   /// 背景颜色
   final Color? backgroundColor;
 
+  /// TabController（可选，由父组件提供）
+  final TabController? controller;
+
   const CommonTabBar({
     super.key,
     required this.tabs,
@@ -70,6 +73,7 @@ class CommonTabBar extends StatelessWidget {
     this.fontSize,
     this.indicatorHeight = 3,
     this.backgroundColor,
+    this.controller,
   });
 
   @override
@@ -82,11 +86,7 @@ class CommonTabBar extends StatelessWidget {
     return Container(
       color: backgroundColor ?? Colors.white,
       child: TabBar(
-        controller: TabController(
-          initialIndex: currentIndex,
-          length: tabs.length,
-          vsync: SingleTickerProviderStateMixin(),
-        )..dispose(),
+        controller: controller,
         isScrollable: isScrollable,
         onTap: onTap,
         labelColor: defaultLabelColor,
